@@ -15,14 +15,14 @@ enum SectionType: Int {
 class DataService {
     
     private var musicInfoContainer = [SectionType : [MusicInfo]]()
-    
+        
     func getDataFromApiCalls(searchText : String){
         let text =  manipulateStringFor(searchText)
         makeAlbumCall(searchText: text)
         makeArtistCall(searchText: text)
         makeTrackCall(searchText: text)
     }
-    
+
     private func makeArtistCall(searchText : String) {
         let url = ("\(BASE_URL)\(ARTIST_URL)\(searchText)\(API_KEY_URL)\(FORMAT_JSON_URL)")
         
@@ -56,6 +56,7 @@ class DataService {
             }
         }
         musicInfoContainer[.tracks] = musicInfoArray
+        checkBeforeSendOutNotification(text: "Track")
     }
     
     private func parseArtistData(response : [String : Any]) {
@@ -68,6 +69,7 @@ class DataService {
             }
         }
         musicInfoContainer[.artist] = musicInfoArray
+        checkBeforeSendOutNotification(text: "Artist")
     }
     
     private func parseAlbumData(response : [String : Any]) {
@@ -80,6 +82,7 @@ class DataService {
                }
            }
            musicInfoContainer[.albums] = musicInfoArray
+        checkBeforeSendOutNotification(text: "Album")
        }
     
     private func extractInformation(info: Dictionary<String,Any>, sectionType: SectionType) -> MusicInfo? {
@@ -121,7 +124,7 @@ class DataService {
     private func parseImageUrls(imageLinks : [Dictionary<String,String>]) -> [String] {
         var imageUrlArray : [String] = []
         for link in imageLinks {
-            if let imageUrl = link["#text"] {
+            if let imageUrl = link[NUMBER_TEXT_KEY] {
                 imageUrlArray.append(imageUrl)
             }
         }
@@ -131,19 +134,23 @@ class DataService {
     private func manipulateStringFor(_ searchText : String) -> String {
         var text = searchText
         text = replaceMultipleSpaceWithUnderline(searchText: text)
-        text = text.replacingOccurrences(of: " ", with: "%20", options: .literal, range: nil)
+        text = text.replacingOccurrences(of: SPACE, with: HTTP_SPACE_CODE, options: .literal, range: nil)
         return text
     }
     
     private func replaceMultipleSpaceWithUnderline(searchText : String) -> String {
-        let regex = "(\\s{2,})"
+        let regex = DOUBLE_SPACE_REGX
         var modString = searchText
         if let regex = try? NSRegularExpression(pattern: regex, options: .caseInsensitive) {
-            modString = regex.stringByReplacingMatches(in: searchText, options: [], range: NSRange(location: 0, length:  searchText.count), withTemplate: "%20")
+            modString = regex.stringByReplacingMatches(in: searchText, options: [], range: NSRange(location: 0, length:  searchText.count), withTemplate: HTTP_SPACE_CODE)
         }
         return modString
     }
     
-
+    private func checkBeforeSendOutNotification(text : String) {
+        if(musicInfoContainer.count == MAX_API_CALLS) {
+            NotificationCenter.default.post(name: API_NOTIFY, object: self, userInfo: musicInfoContainer)
+        }
+    }
     
 }

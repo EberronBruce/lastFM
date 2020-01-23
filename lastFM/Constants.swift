@@ -19,6 +19,8 @@ let SECERT_KEY = "d59e4e5f555604aa476e83202bef1ee6"
 let MUSIC_CELL = "musicCell"
 let MUSIC_IMAGE_CELL = "musicImageCell"
 
+let API_NOTIFY = Notification.Name("api.notify.complete")
+
 let RESULTS_KEY = "results"
 let TRACK_MATCHES_KEY = "trackmatches"
 let TRACK_KEY = "track"
@@ -29,3 +31,8 @@ let ALBUM_KEY = "album"
 let NAME_KEY = "name"
 let URL_KEY = "url"
 let IMAGE_KEY = "image"
+let NUMBER_TEXT_KEY = "#text"
+let HTTP_SPACE_CODE = "%20"
+let SPACE = " "
+let DOUBLE_SPACE_REGX = "(\\s{2,})"
+let MAX_API_CALLS = 3

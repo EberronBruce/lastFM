@@ -12,93 +12,93 @@ class MusicSelectorController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
-
-    
-    var albumInfo : [MusicInfo] = []
-    var artistInfo : [MusicInfo] = []
-    var songInfo : [MusicInfo] = []
+    private var musicInfoContainer = [SectionType : [MusicInfo]]()
+    private var isApiFinished = true
+    private var beforeSearch : String?
+    private var afterSearch : String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        tableView.delegate = self
-        tableView.dataSource = self
-        searchBar.delegate = self
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
-        generateMusicTestInfo()
+        setupViewController()
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
     
-    func generateMusicTestInfo() {
-        var info = MusicInfo(artist: "Artist 1", album: "Album 1", song: "Song 1", type: .albums, url: "url1")
-        albumInfo.append(info)
-        info = MusicInfo(artist: "Artist 1", album: "Album 2", song: "Song 1", type: .albums, url: "url1")
-        albumInfo.append(info)
-        info = MusicInfo(artist: "Artist 1", album: "Album 3", song: "Song 1", type: .albums, url: "url1")
-        albumInfo.append(info)
-        info = MusicInfo(artist: "Artist 1", album: "Album 4", song: "Song 1", type: .albums, url: "url1")
-        albumInfo.append(info)
+    func setupViewController() {
+        tableView.delegate = self
+        tableView.dataSource = self
+        searchBar.delegate = self
+        NotificationCenter.default.addObserver(self, selector: #selector(actOnApiCompleteNotification(_:)), name: API_NOTIFY, object: nil)
         
-        info = MusicInfo(artist: "Artist 1", album: "Album 1", song: "Song 1", type: .artist, url: "url1")
-        artistInfo.append(info)
-        info = MusicInfo(artist: "Artist 2", album: "Album 1", song: "Song 1", type: .artist, url: "url1")
-        artistInfo.append(info)
-        info = MusicInfo(artist: "Artist 3", album: "Album 1", song: "Song 1", type: .artist, url: "url1")
-        artistInfo.append(info)
-        
-        info = MusicInfo(artist: "Artist 1", album: "Album 1", song: "Song 1", type: .artist, url: "url1")
-        songInfo.append(info)
-        info = MusicInfo(artist: "Artist 1", album: "Album 1", song: "Song 2", type: .artist, url: "url1")
-        songInfo.append(info)
-        info = MusicInfo(artist: "Artist 1", album: "Album 1", song: "Song 3", type: .artist, url: "url1")
-        songInfo.append(info)
-        info = MusicInfo(artist: "Artist 1", album: "Album 1", song: "Song 4", type: .artist, url: "url1")
-        songInfo.append(info)
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+
     }
+    
+    
+    @objc func actOnApiCompleteNotification(_ notification: Notification) {
+        DispatchQueue.main.async {
+            guard let isSafe = self.checkSearchAndMakeAPICallIfDifferent() else {
+                print("Something serious happened. There is no search text")
+                return
+            }
+            if isSafe {
+                if let data = notification.userInfo as? [SectionType : [MusicInfo]] {
+                    self.musicInfoContainer = data
+                    self.tableView.reloadData()
+                }
+            }
+        }
+
+    }
+    
+    //Func is used to prevent race conditions with web searches but keeps the search text up to date
+    private func checkSearchAndMakeAPICallIfDifferent() -> Bool? {
+        if let before = beforeSearch, let after = afterSearch{
+            if before.elementsEqual(after) {
+                isApiFinished = true
+                return true
+            } else {
+                self.makeAPICallForMusicInfoFrom(text: after)
+                beforeSearch = afterSearch
+            }
+            return false
+        }
+        return nil
+    }
+    
+    private func makeAPICallForMusicInfoFrom(text : String) {
+        let dataServices = DataService()
+        dataServices.getDataFromApiCalls(searchText: text)
+    }
+    
     
     
 }
 
 extension MusicSelectorController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
-        let dataServices = DataService()
-        dataServices.getDataFromApiCalls(searchText: searchText)
-
+        //To prevent more that one API call at time which will help resolve race conditions
+        beforeSearch = searchText
+        if isApiFinished {
+            makeAPICallForMusicInfoFrom(text: searchText)
+            isApiFinished = false
+            afterSearch = searchText
+        }
     }
-        
 }
 
 
 extension MusicSelectorController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return musicInfoContainer.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: MUSIC_CELL) as? MusicCell {
-            var title : String = "No String"
-            var subTitle : String = "No String"
-            if let section = SectionType(rawValue: indexPath.section)
-            {
-                switch section {
-                case .albums:
-                    let album = albumInfo[indexPath.row]
-                    title = album.album
-                    subTitle = album.artist
-                case .tracks:
-                    let song = songInfo[indexPath.row]
-                    title = song.song
-                    subTitle = song.artist
-                case .artist:
-                    let artist = artistInfo[indexPath.row]
-                    title = artist.artist
-                    subTitle = artist.album
-                }
-            }
+            let (title, subTitle) = configureCellInformation(indexPath: indexPath)
             cell.configureCell(title: title, subTitle: subTitle)
             return cell
         } else {
@@ -107,15 +107,53 @@ extension MusicSelectorController: UITableViewDataSource, UITableViewDelegate {
         
     }
     
+    func configureCellInformation(indexPath: IndexPath) -> (title : String, subTitle : String) {
+        var title : String = "No String"
+        var subTitle : String = "No String"
+        if let section = SectionType(rawValue: indexPath.section)
+        {
+            switch section {
+            case .albums:
+                if let albums = musicInfoContainer[.albums] {
+                    let album = albums[indexPath.row]
+                    title = album.album
+                    subTitle = album.artist
+                }
+            case .tracks:
+                if let tracks = musicInfoContainer[.tracks] {
+                    let song = tracks[indexPath.row]
+                    title = song.song
+                    subTitle = song.artist
+                }
+            case .artist:
+                if let artists = musicInfoContainer[.artist] {
+                    let artist = artists[indexPath.row]
+                    title = artist.artist
+                    subTitle = artist.album
+                }
+            }
+        }
+        return (title, subTitle)
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let musicType = SectionType(rawValue: section) {
             switch musicType {
             case .albums:
-                return albumInfo.count
+                if let albums = musicInfoContainer[.albums] {
+                    return albums.count
+                }
+                return 0
             case .tracks:
-                return songInfo.count
+                if let tracks =  musicInfoContainer[.tracks] {
+                    return tracks.count
+                }
+                return 0
             case .artist:
-                return artistInfo.count
+                if let artists = musicInfoContainer[.artist] {
+                    return artists.count
+                }
+                return 0
             }
         }
         return 0
@@ -144,8 +182,10 @@ extension MusicSelectorController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
+        
     }
+    
+
 }
 
 

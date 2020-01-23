@@ -53,6 +53,15 @@ class MusicInfo {
         }
     }
     
+    var url : String {
+           get {
+               if let url = _url {
+                   return url
+               }
+               return ""
+           }
+       }
+    
     var image: UIImage? {
         set{
             _image = newValue
