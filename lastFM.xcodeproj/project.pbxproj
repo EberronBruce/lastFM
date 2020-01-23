@@ -141,9 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				7A04E56823D7CA6B00DF2C16 /* Constants.swift */,
-				7A12F1D823D8CC260098C400 /* DataService.swift */,
 				7A12F1DA23D8CD430098C400 /* WebServices.swift */,
-				7A12F1DC23D90C6F0098C400 /* ImageOperations.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -151,7 +149,9 @@
 		7A36DC2323D8063F00A6D188 /* Data Model */ = {
 			isa = PBXGroup;
 			children = (
+				7A12F1D823D8CC260098C400 /* DataService.swift */,
 				7A36DC2123D7E8A200A6D188 /* MusicInfo.swift */,
+				7A12F1DC23D90C6F0098C400 /* ImageOperations.swift */,
 			);
 			path = "Data Model";
 			sourceTree = "<group>";

@@ -17,12 +17,13 @@ class MusicInfo {
     private var _type : SectionType!
     private var imageUrls : [String]?
     
-    init(artist: String, album : String? = nil, song : String? = nil, type : SectionType, url : String) {
+    init(artist: String, album : String? = nil, song : String? = nil, type : SectionType, url : String, imageUrls : [String]? = nil) {
         _artist = artist
         _album = album
         _song = song
         _type = type
         _url = url
+        self.imageUrls = imageUrls
     }
     
     var artist : String {
