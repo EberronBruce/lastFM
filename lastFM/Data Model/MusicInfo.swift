@@ -8,74 +8,87 @@
 
 import UIKit
 
+enum Category : Int {
+    case albums, artist, tracks
+    
+    static let count: Int = {
+        var max: Int = 0
+        while let _ = Category(rawValue: max) {max += 1}
+        return max
+    }()
+}
+
 class MusicInfo {
     private var _artist: String!
     private var _album: String?
     private var _song: String?
-    private var _image: UIImage?
+    private var _mediumImage: UIImage?
+    private var _imageArray: [UIImage]?
     private var _url : String!
-    private var _type : SectionType!
-    private var imageUrls : [String]?
+    private var _category : Category!
+    private var _imageUrls : Dictionary<String,String>?
     
-    init(artist: String, album : String? = nil, song : String? = nil, type : SectionType, url : String, imageUrls : [String]? = nil) {
+    init(artist: String, album : String? = nil, song : String? = nil, category : Category, url : String, imageUrls : Dictionary<String,String>? = nil) {
         _artist = artist
         _album = album
         _song = song
-        _type = type
+        _category = category
         _url = url
-        self.imageUrls = imageUrls
+        _imageUrls = imageUrls
+    }
+    
+    var imageUrls : Dictionary<String,String>? {
+        get {
+            return _imageUrls ?? nil
+        }
+    }
+    
+    var category : Category {
+        get {
+            return _category
+        }
     }
     
     var artist : String {
         get {
-            if let artist = _artist {
-                return artist
-            }
-            return ""
+          return _artist
         }
     }
     
     var album : String {
         get {
-            if let album = _album {
-                return album
-            }
-            return ""
+            return _album ?? EMPTY
         }
     }
     
     var song : String {
         get {
-            if let song = _song {
-                return song
-            }
-            return ""
+           return _song ?? EMPTY
         }
     }
     
     var url : String {
-           get {
-               if let url = _url {
-                   return url
-               }
-               return ""
-           }
-       }
+        get {
+            return _url 
+        }
+    }
     
-    var image: UIImage? {
+    var mediumImage: UIImage? {
         set{
-            _image = newValue
+            _mediumImage = newValue
         }
         get {
-            if _image != nil {
-                return _image
-            } else{
-                return nil
-            }
+            return _mediumImage ?? nil
         }
     }
     
-    func addImageLink(url : String) {
-        imageUrls?.append(url)
+    var imageArray : [UIImage]? {
+        set {
+            _imageArray = newValue
+        }
+        get {
+            return _imageArray ?? nil
+        }
     }
+
 }

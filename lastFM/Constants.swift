@@ -6,7 +6,7 @@
 //  Copyright © 2020 Red Raven Computing Studios. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 let BASE_URL = "http://ws.audioscrobbler.com/2.0/"
 let ALBUM_URL = "?method=album.search&album="
@@ -21,18 +21,39 @@ let MUSIC_IMAGE_CELL = "musicImageCell"
 
 let API_NOTIFY = Notification.Name("api.notify.complete")
 
-let RESULTS_KEY = "results"
-let TRACK_MATCHES_KEY = "trackmatches"
-let TRACK_KEY = "track"
-let ARTIST_MATCHES_KEY = "artistmatches"
-let ARTIST_KEY = "artist"
-let ALBUM_MATCHES_KEY = "albummatches"
-let ALBUM_KEY = "album"
-let NAME_KEY = "name"
-let URL_KEY = "url"
-let IMAGE_KEY = "image"
-let NUMBER_TEXT_KEY = "#text"
-let HTTP_SPACE_CODE = "%20"
+
+let DOWNLOAD_QUEUE = "Download queue"
+let IMAGE_OPERATION_DOWNLOAD_ERROR = "Issue with image Data"
+
+let KEY_RESULTS = "results"
+let KEY_TRACK_MATCHES = "trackmatches"
+let KEY_TRACK = "track"
+let KEY_ARTIST_MATCHES = "artistmatches"
+let KEY_ARTIST = "artist"
+let KEY_ALBUM_MATCHES = "albummatches"
+let KEY_ALBUM = "album"
+let KEY_NAME = "name"
+let KEY_URL = "url"
+let KEY_IMAGE = "image"
+let KEY_NUMBER_TEXT = "#text"
+let CODE_HTTP_SPACE = "%20"
 let SPACE = " "
-let DOUBLE_SPACE_REGX = "(\\s{2,})"
+let EMPTY = ""
+
+let REGX_DOUBLE_SPACE = "(\\s{2,})"
 let MAX_API_CALLS = 3
+let KEY_SIZE = "size"
+let KEY_SMALL = "small"
+let KEY_MEDIUM = "medium"
+let KEY_LARGE = "large"
+let KEY_EXTRA_LARGE = "extralarge"
+
+let IMAGE_LOGO = "logo"
+
+let COLOR_THEME_GRAY = UIColor(displayP3Red: 0.314, green: 0.314, blue: 0.314, alpha: 1)
+let COLOR_THEME_RED = UIColor(displayP3Red: 0.725, green: 0.099, blue: 0.000, alpha: 1)
+let FONT_MARKER_FELT = "Marker Felt"
+
+let SECTION_TITLE_ALBUMS = "Albums"
+let SECTION_TITLE_ARTISTS = "Artist"
+let SECTION_TITLE_SONGS = "Songs"

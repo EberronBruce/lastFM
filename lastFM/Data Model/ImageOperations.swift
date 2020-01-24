@@ -18,7 +18,7 @@ class ImageRecord {
     let name:String
     let url: URL
     var state = ImageRecordState.New
-    var image = UIImage(named: "empty")
+    var image = UIImage(named: IMAGE_LOGO)
     
     init(name: String, url: URL) {
         self.name = name
@@ -28,10 +28,10 @@ class ImageRecord {
 
 //This sets up the NSOperations and holds the queues for downloads
 class PendingOperations {
-    lazy var downloadsInProgress = [NSIndexPath:Operation]()
+    lazy var downloadsInProgress = [IndexPath:Operation]()
     lazy var downloadQueue:OperationQueue = {
         var queue = OperationQueue()
-        queue.name = "Download queue"
+        queue.name = DOWNLOAD_QUEUE
         return queue
     }()
 }
@@ -47,7 +47,9 @@ class ImageDownloader: Operation {
     
     override func main() {
         
+        
         do {
+
             let imageData = try Data(contentsOf: self.imageRecord.url)
             
             if self.isCancelled{
@@ -59,10 +61,10 @@ class ImageDownloader: Operation {
                 self.imageRecord.state = .Downloaded
             } else {
                 self.imageRecord.state = .Failed
-                self.imageRecord.image = UIImage(named: "unknown")
+                self.imageRecord.image = UIImage(named: IMAGE_LOGO)
             }
         } catch {
-            print("Issue with image Data")
+            print(IMAGE_OPERATION_DOWNLOAD_ERROR)
         }
         
     }

@@ -17,12 +17,16 @@ class MusicCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        cellStyleView.layer.cornerRadius = 5
+        self.cellStyleView.layer.cornerRadius = 5
     }
 
     func configureCell(title text : String, subTitle : String) {
         self.cellTitle.text = text
         self.subTitle.text = subTitle
+    }
+    
+    func updateCellImage(image: UIImage) {
+        self.cellImage.image = image
     }
 
 }
