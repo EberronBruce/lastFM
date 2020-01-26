@@ -6,38 +6,63 @@
 //  Copyright © 2020 Red Raven Computing Studios. All rights reserved.
 //
 
-import Foundation
-
+import UIKit
+/* NOTE: There is some issues with the API call and it sometimes sends back wrong data. Confirmed it with Postman and a web browser.
+ To re-duplicate an example follow steps:
+ Make api call to artist setting artist of 'R' page 6 limit 1, or limit 6 page 1.
+ There will be only 3 items return back instead of 6.
+ This error is beyond my control
+ */
 
 
 class DataService {
     
-    private var musicInfoContainer = [Category : [MusicInfo]]()
+    private var musicInfoContainer = [MusicCategory : [MusicInfo]]()
+    private var imageContainer = [UIImage]()
+    private var isSingleCall = false
         
-    func getDataFromApiCalls(searchText : String){
+    func getDataFromApiCalls(searchText : String, pageNumber : Int = 1){
         let text =  manipulateStringFor(searchText)
-        makeAlbumCall(searchText: text)
-        makeArtistCall(searchText: text)
-        makeTrackCall(searchText: text)
+        makeAlbumCall(searchText: text, pageNumber: pageNumber)
+        makeArtistCall(searchText: text, pageNumber: pageNumber)
+        makeTrackCall(searchText: text, pageNumber: pageNumber)
+    }
+    
+    func getArtistDataFromApiCall(searchText : String, pageNumber : Int = 1) {
+        isSingleCall = true
+        let text =  manipulateStringFor(searchText)
+        makeArtistCall(searchText: text, pageNumber: pageNumber)
+    }
+    
+    func getAlbumDataFromApiCall(searchText : String, pageNumber : Int = 1) {
+        isSingleCall = true
+        let text =  manipulateStringFor(searchText)
+        makeAlbumCall(searchText: text, pageNumber: pageNumber)
+    }
+    
+    func getTrackDataFromApiCall(searchText : String, pageNumber : Int = 1) {
+        isSingleCall = true
+        let text =  manipulateStringFor(searchText)
+        makeTrackCall(searchText: text, pageNumber: pageNumber)
     }
 
-    private func makeArtistCall(searchText : String) {
-        let url = ("\(BASE_URL)\(ARTIST_URL)\(searchText)\(API_KEY_URL)\(FORMAT_JSON_URL)")
+    private func makeArtistCall(searchText : String, pageNumber: Int, limitNumber: Int = NUMBER_LIMIT) {
+        let url = ("\(URL_BASE)\(URL_ARTIST)\(searchText)\(URL_API_KEY)\(URL_FORMAT_JSON)\(URL_LIMIT)\(limitNumber)\(URL_PAGE)\(pageNumber)")
         postJSONToURL(urlString: url, contentBody: [:]) { (data, response, error) in
             self.parseArtistData(response: response)
         }
     }
     
-    private func makeAlbumCall(searchText : String) {
-        let url = ("\(BASE_URL)\(ALBUM_URL)\(searchText)\(API_KEY_URL)\(FORMAT_JSON_URL)")
+    private func makeAlbumCall(searchText : String, pageNumber: Int, limitNumber: Int = NUMBER_LIMIT) {
+        let url = ("\(URL_BASE)\(URL_ALBUM)\(searchText)\(URL_API_KEY)\(URL_FORMAT_JSON)\(URL_LIMIT)\(limitNumber)\(URL_PAGE)\(pageNumber)")
         postJSONToURL(urlString: url, contentBody: [:]) { (data, response, error) in
             self.parseAlbumData(response: response)
         }
  
     }
     
-    private func makeTrackCall(searchText : String) {
-        let url = ("\(BASE_URL)\(TRACK_URL)\(searchText)\(API_KEY_URL)\(FORMAT_JSON_URL)")
+    private func makeTrackCall(searchText : String, pageNumber: Int, limitNumber: Int = (NUMBER_LIMIT)) {
+        let url = ("\(URL_BASE)\(URL_TRACK)\(searchText)\(URL_API_KEY)\(URL_FORMAT_JSON)\(URL_LIMIT)\(limitNumber)\(URL_PAGE)\(pageNumber)")
         postJSONToURL(urlString: url, contentBody: [:]) { (data, response, error) in
             self.parseTrackData(response: response)
         }
@@ -52,8 +77,10 @@ class DataService {
                 }
             }
         }
+
         musicInfoContainer[.tracks] = musicInfoArray
-        sendOutMusicInfoNotification()
+        sendOutMusicInfoNotification(forArray: musicInfoArray)
+        
     }
     
     private func parseArtistData(response : [String : Any]) {
@@ -66,7 +93,7 @@ class DataService {
             }
         }
         musicInfoContainer[.artist] = musicInfoArray
-        sendOutMusicInfoNotification()
+        sendOutMusicInfoNotification(forArray: musicInfoArray)
     }
     
     private func parseAlbumData(response : [String : Any]) {
@@ -79,10 +106,11 @@ class DataService {
             }
         }
         musicInfoContainer[.albums] = musicInfoArray
-        sendOutMusicInfoNotification()
+        sendOutMusicInfoNotification(forArray: musicInfoArray)
+
     }
     
-    private func extractInformation(info: Dictionary<String,Any>, category: Category) -> MusicInfo? {
+    private func extractInformation(info: Dictionary<String,Any>, category: MusicCategory) -> MusicInfo? {
         if let name = info[KEY_NAME] as? String, let url = info[KEY_URL] as? String {
             let artist = info[KEY_ARTIST] as? String
 
@@ -97,7 +125,7 @@ class DataService {
         return nil
     }
     
-    private func setupMusicInfo(category : Category, name: String, url : String, artist : String? = nil, imageUrlArray : Dictionary<String,String>? = nil) -> MusicInfo? {
+    private func setupMusicInfo(category : MusicCategory, name: String, url : String, artist : String? = nil, imageUrlArray : Dictionary<String,String>? = nil) -> MusicInfo? {
         var musicInfo : MusicInfo? = nil
         switch category {
         case .albums:
@@ -127,10 +155,15 @@ class DataService {
         return imageUrlDict
     }
     
+    private func makeImageCall() {
+        
+    }
+    
+ 
     private func manipulateStringFor(_ searchText : String) -> String {
         var text = searchText
         text = replaceMultipleSpaceWithUnderline(searchText: text)
-        text = text.replacingOccurrences(of: SPACE, with: CODE_HTTP_SPACE, options: .literal, range: nil)
+        text = text.replacingOccurrences(of: STRING_SPACE, with: CODE_HTTP_SPACE, options: .literal, range: nil)
         return text
     }
     
@@ -143,26 +176,16 @@ class DataService {
         return modString
     }
     
-    private func sendOutMusicInfoNotification() {
-        if(musicInfoContainer.count == MAX_API_CALLS) {
-            NotificationCenter.default.post(name: API_NOTIFY, object: self, userInfo: musicInfoContainer)
+    private func sendOutMusicInfoNotification(forArray musicArray: [MusicInfo]) {
+        if isSingleCall {
+            let dictionary = [KEY_INFO_ARRAY : musicArray]
+            NotificationCenter.default.post(name: NOTIFY_API_MUSIC_ARRAY, object: self, userInfo: dictionary)
+            return
+        }
+        if musicInfoContainer.count == MAX_API_CALLS {
+            NotificationCenter.default.post(name: NOTIFY_API_MUSIC_DICT, object: self, userInfo: musicInfoContainer)
         }
     }
     
-    private func printMusicInfo(musicInfo : MusicInfo) {
-        print("----------------------------")
-        print(musicInfo.artist)
-        print(musicInfo.album)
-        print(musicInfo.url)
-        print("+++++++++++++++++++++++++++")
-        if let links = musicInfo.imageUrls {
-            for (key, value) in links {
-                print("Key: \(key), Value: \(value)")
-            }
-        }
-        print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-
-        
-    }
     
 }

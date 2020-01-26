@@ -46,10 +46,8 @@ class ImageDownloader: Operation {
     }
     
     override func main() {
-        
-        
+                
         do {
-
             let imageData = try Data(contentsOf: self.imageRecord.url)
             
             if self.isCancelled{

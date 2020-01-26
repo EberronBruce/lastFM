@@ -8,12 +8,12 @@
 
 import UIKit
 
-enum Category : Int {
+enum MusicCategory : Int {
     case albums, artist, tracks
     
     static let count: Int = {
         var max: Int = 0
-        while let _ = Category(rawValue: max) {max += 1}
+        while let _ = MusicCategory(rawValue: max) {max += 1}
         return max
     }()
 }
@@ -25,10 +25,10 @@ class MusicInfo {
     private var _mediumImage: UIImage?
     private var _imageArray: [UIImage]?
     private var _url : String!
-    private var _category : Category!
+    private var _category : MusicCategory!
     private var _imageUrls : Dictionary<String,String>?
     
-    init(artist: String, album : String? = nil, song : String? = nil, category : Category, url : String, imageUrls : Dictionary<String,String>? = nil) {
+    init(artist: String, album : String? = nil, song : String? = nil, category : MusicCategory, url : String, imageUrls : Dictionary<String,String>? = nil) {
         _artist = artist
         _album = album
         _song = song
@@ -43,7 +43,7 @@ class MusicInfo {
         }
     }
     
-    var category : Category {
+    var category : MusicCategory {
         get {
             return _category
         }
@@ -57,13 +57,13 @@ class MusicInfo {
     
     var album : String {
         get {
-            return _album ?? EMPTY
+            return _album ?? STRING_EMPTY
         }
     }
     
     var song : String {
         get {
-           return _song ?? EMPTY
+           return _song ?? STRING_EMPTY
         }
     }
     

@@ -11,7 +11,7 @@ import UIKit
 class MusicDetailViewController: UIViewController {
     
     @IBOutlet weak var imageCollectionView: UICollectionView!
-    private let reuseIdentifier = MUSIC_IMAGE_CELL
+    private let reuseIdentifier = CELL_MUSIC_IMAGE
     private var photosUrlArray = [String]()
     
     override func viewDidLoad() {

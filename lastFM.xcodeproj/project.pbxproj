@@ -12,9 +12,11 @@
 		7A12F1D923D8CC260098C400 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A12F1D823D8CC260098C400 /* DataService.swift */; };
 		7A12F1DB23D8CD430098C400 /* WebServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A12F1DA23D8CD430098C400 /* WebServices.swift */; };
 		7A12F1DD23D90C6F0098C400 /* ImageOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A12F1DC23D90C6F0098C400 /* ImageOperations.swift */; };
+		7A12F1E123DAD0920098C400 /* MusicSelectorControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A12F1E023DAD0920098C400 /* MusicSelectorControllerExtensions.swift */; };
 		7A36DC2223D7E8A200A6D188 /* MusicInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A36DC2123D7E8A200A6D188 /* MusicInfo.swift */; };
 		7A36DC2823D807B400A6D188 /* MusicDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A36DC2723D807B400A6D188 /* MusicDetailViewController.swift */; };
 		7A36DC2D23D80D7600A6D188 /* MusicImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A36DC2C23D80D7600A6D188 /* MusicImageCell.swift */; };
+		7A50098E23DD166100774094 /* LoadingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A50098D23DD166100774094 /* LoadingCell.m */; };
 		7A7A54DE23D6AF5D0017E9D3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A54DD23D6AF5D0017E9D3 /* AppDelegate.swift */; };
 		7A7A54E023D6AF5D0017E9D3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A54DF23D6AF5D0017E9D3 /* SceneDelegate.swift */; };
 		7A7A54E223D6AF5D0017E9D3 /* MusicSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A54E123D6AF5D0017E9D3 /* MusicSelectorController.swift */; };
@@ -49,9 +51,13 @@
 		7A12F1D823D8CC260098C400 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		7A12F1DA23D8CD430098C400 /* WebServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebServices.swift; sourceTree = "<group>"; };
 		7A12F1DC23D90C6F0098C400 /* ImageOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOperations.swift; sourceTree = "<group>"; };
+		7A12F1E023DAD0920098C400 /* MusicSelectorControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicSelectorControllerExtensions.swift; sourceTree = "<group>"; };
 		7A36DC2123D7E8A200A6D188 /* MusicInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicInfo.swift; sourceTree = "<group>"; };
 		7A36DC2723D807B400A6D188 /* MusicDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicDetailViewController.swift; sourceTree = "<group>"; };
 		7A36DC2C23D80D7600A6D188 /* MusicImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicImageCell.swift; sourceTree = "<group>"; };
+		7A50098B23DD166000774094 /* lastFM-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "lastFM-Bridging-Header.h"; sourceTree = "<group>"; };
+		7A50098C23DD166100774094 /* LoadingCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoadingCell.h; sourceTree = "<group>"; };
+		7A50098D23DD166100774094 /* LoadingCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoadingCell.m; sourceTree = "<group>"; };
 		7A7A54DA23D6AF5D0017E9D3 /* lastFM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lastFM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A7A54DD23D6AF5D0017E9D3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7A7A54DF23D6AF5D0017E9D3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -98,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				7A7A54E123D6AF5D0017E9D3 /* MusicSelectorController.swift */,
+				7A12F1E023DAD0920098C400 /* MusicSelectorControllerExtensions.swift */,
 			);
 			path = "Music Selector";
 			sourceTree = "<group>";
@@ -106,6 +113,9 @@
 			isa = PBXGroup;
 			children = (
 				7A04E56623D7C54600DF2C16 /* MusicCell.swift */,
+				7A50098C23DD166100774094 /* LoadingCell.h */,
+				7A50098D23DD166100774094 /* LoadingCell.m */,
+				7A50098B23DD166000774094 /* lastFM-Bridging-Header.h */,
 			);
 			path = "Table View Cell";
 			sourceTree = "<group>";
@@ -311,6 +321,7 @@
 				TargetAttributes = {
 					7A7A54D923D6AF5D0017E9D3 = {
 						CreatedOnToolsVersion = 11.3.1;
+						LastSwiftMigration = 1130;
 					};
 					7A7A54F223D6AF5F0017E9D3 = {
 						CreatedOnToolsVersion = 11.3.1;
@@ -380,9 +391,11 @@
 				7A12F1DB23D8CD430098C400 /* WebServices.swift in Sources */,
 				7A7A54DE23D6AF5D0017E9D3 /* AppDelegate.swift in Sources */,
 				7A36DC2D23D80D7600A6D188 /* MusicImageCell.swift in Sources */,
+				7A12F1E123DAD0920098C400 /* MusicSelectorControllerExtensions.swift in Sources */,
 				7A7A54E823D6AF5D0017E9D3 /* lastFM.xcdatamodeld in Sources */,
 				7A12F1DD23D90C6F0098C400 /* ImageOperations.swift in Sources */,
 				7A36DC2823D807B400A6D188 /* MusicDetailViewController.swift in Sources */,
+				7A50098E23DD166100774094 /* LoadingCell.m in Sources */,
 				7A7A54E023D6AF5D0017E9D3 /* SceneDelegate.swift in Sources */,
 				7A04E56923D7CA6B00DF2C16 /* Constants.swift in Sources */,
 				7A12F1D923D8CC260098C400 /* DataService.swift in Sources */,
@@ -558,6 +571,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = V3GFNATBC5;
 				INFOPLIST_FILE = lastFM/Info.plist;
@@ -567,6 +581,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.redravencomputing.lastFM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "lastFM/Views/Table View Cell/lastFM-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -576,6 +592,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = V3GFNATBC5;
 				INFOPLIST_FILE = lastFM/Info.plist;
@@ -585,6 +602,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.redravencomputing.lastFM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "lastFM/Views/Table View Cell/lastFM-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
