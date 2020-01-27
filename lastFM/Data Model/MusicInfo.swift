@@ -29,14 +29,22 @@ class MusicInfo {
     private var _url : String!
     private var _category : MusicCategory!
     private var _imageUrls : Dictionary<String,String>?
+    private var _imageRecord : ImageRecord?
     
-    init(artist: String, album : String? = nil, song : String? = nil, category : MusicCategory, url : String, imageUrls : Dictionary<String,String>? = nil) {
+    init(artist: String, album : String? = nil, song : String? = nil, category : MusicCategory, url : String, imageUrls : Dictionary<String,String>? = nil, imageRecord: ImageRecord? = nil) {
         _artist = artist
         _album = album
         _song = song
         _category = category
         _url = url
         _imageUrls = imageUrls
+        _imageRecord = imageRecord
+    }
+    
+    var imageRecord : ImageRecord? {
+        get {
+            return _imageRecord ?? nil
+        }
     }
     
     var imageUrls : Dictionary<String,String>? {

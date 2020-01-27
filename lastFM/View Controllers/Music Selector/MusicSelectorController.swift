@@ -24,7 +24,6 @@ class MusicSelectorController: UIViewController {
     internal var musicInfoContainer = [MusicCategory : [MusicInfo]]()
     
     internal var infoContainer = [MusicInfo]()
-    internal var imageRecords = [ImageRecord?]()
     internal var pageNumberDictionary = [MusicCategory : Int]()
     
     internal var isFetchingNewPage = false
@@ -91,9 +90,6 @@ class MusicSelectorController: UIViewController {
                 if let data = notification.userInfo as? [MusicCategory : [MusicInfo]]{
                     self.musicInfoContainer = data
                     self.setContainerFromSelectTabBar(tabBar: self.tabBar)
-                    
-                    self.loadImageRecordData(musicInfoArray: self.infoContainer)
-                    
                 }
                 
                 self.tableView.reloadData()
@@ -122,23 +118,10 @@ class MusicSelectorController: UIViewController {
                         self.musicInfoContainer[category] = musicArray
                     }
 
-                    self.loadImageRecordData(musicInfoArray: musicArray)
                     self.isFetchingNewPage = false
                 }
             }
             self.tableView.reloadData()
-        }
-    }
-    
-
-    private func loadImageRecordData(musicInfoArray : [MusicInfo]) {
-        for musicInfo in musicInfoArray {
-            if let url = musicInfo.imageUrls![KEY_LARGE], !url.isEmpty {
-                let imageRecord = ImageRecord(name: musicInfo.artist, url: URL(string: url)!)
-                self.imageRecords.append(imageRecord)
-            } else {
-                self.imageRecords.append(nil)
-            }
         }
     }
     
@@ -205,6 +188,11 @@ class MusicSelectorController: UIViewController {
 //MARK: - Search Bar Delegates Methods
 extension MusicSelectorController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            clearContainersAndReload()
+            return
+        }
+        
         self.resetPageNumber()
         isFetchingNewPage = false
         let pageNumber = 1
@@ -214,11 +202,10 @@ extension MusicSelectorController: UISearchBarDelegate {
             makeAPICallForMusicInfoFrom(text: searchText, pageNumber: pageNumber)
             isApiFinished = false
             afterSearch = searchText
+            
         }
+        self.tableView.reloadData()
         
-        if searchText.isEmpty {
-            clearContainersAndReload()
-        }
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -228,7 +215,6 @@ extension MusicSelectorController: UISearchBarDelegate {
     private func clearContainersAndReload() {
         musicInfoContainer = [:]
         infoContainer = []
-        imageRecords = []
         self.tableView.reloadData()
     }
 }
@@ -240,8 +226,6 @@ extension MusicSelectorController: UITabBarDelegate {
             scrollTableViewToTop()
         }
         isFetchingNewPage = false
-        imageRecords = []
-        loadImageRecordData(musicInfoArray: infoContainer)
         self.tableView.reloadData()
     }
 }

@@ -37,10 +37,11 @@ extension MusicSelectorController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             if let cell = tableView.dequeueReusableCell(withIdentifier: CELL_MUSIC, for: indexPath) as? MusicCell {
+                
                 let (title, subTitle) = getCellInformation(indexPath: indexPath)
                 cell.configureCell(title: title, subTitle: subTitle)
                 
-                guard let imageRecord = imageRecords[indexPath.row] else {
+                guard let imageRecord = getImageRecord(indexPath: indexPath) else {
                     if let defaultImage = UIImage(named: IMAGE_LOGO) {
                         cell.updateCellImage(image: defaultImage)
                     }
@@ -54,6 +55,7 @@ extension MusicSelectorController: UITableViewDataSource, UITableViewDelegate {
                         cell.updateCellImage(image: defaultImage)
                     }
                 }
+                
                 getImageFrom(imageRecord: imageRecord, indexPath: indexPath)
                 
                 return cell
@@ -199,6 +201,18 @@ extension MusicSelectorController {
         }
         
         return (title, subTitle)
+    }
+    
+    func getImageRecord(indexPath: IndexPath) -> ImageRecord? {
+        let musicInfo = infoContainer[indexPath.row]
+        switch musicInfo.category {
+        case .albums:
+            return musicInfo.imageRecord
+        case .tracks:
+            return musicInfo.imageRecord
+        case .artist:
+            return musicInfo.imageRecord
+        }
     }
     
 }

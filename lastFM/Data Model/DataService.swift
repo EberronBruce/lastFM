@@ -153,6 +153,11 @@ class DataService {
 
             if let imageLinks = info[KEY_IMAGE] as? [Dictionary<String,String>] {
                 let imageLinkArray = self.parseImageUrls(imageLinks: imageLinks)
+                if let artistName = artist {
+                    let imageRecord = getImageRecord(imageUrls: imageLinkArray, artist: artistName)
+                    let musicInfo = setupMusicInfo(category: category, name: name, url: url, artist: artist, imageUrlArray: imageLinkArray, imageRecord: imageRecord)
+                    return musicInfo
+                }
                 let musicInfo = setupMusicInfo(category: category, name: name, url: url, artist: artist, imageUrlArray: imageLinkArray)
                 return musicInfo
             }
@@ -162,21 +167,30 @@ class DataService {
         return nil
     }
     
+    private func getImageRecord(imageUrls : [String : String], artist: String) -> ImageRecord? {
+        var imageRecord : ImageRecord? = nil
+        if let url = imageUrls[KEY_LARGE], !url.isEmpty {
+            imageRecord = ImageRecord(name: artist, url: URL(string: url)!)
+        }
+        return imageRecord
+    }
+
+    
     //Sets up the MusicInfo class by Music Category.
-    private func setupMusicInfo(category : MusicCategory, name: String, url : String, artist : String? = nil, imageUrlArray : Dictionary<String,String>? = nil) -> MusicInfo? {
+    private func setupMusicInfo(category : MusicCategory, name: String, url : String, artist : String? = nil, imageUrlArray : Dictionary<String,String>? = nil, imageRecord: ImageRecord? = nil) -> MusicInfo? {
         var musicInfo : MusicInfo? = nil
         switch category {
         case .albums:
             if artist != nil {
-                musicInfo = MusicInfo(artist: artist!, album: name, song: nil, category: category, url: url, imageUrls: imageUrlArray)
+                musicInfo = MusicInfo(artist: artist!, album: name, song: nil, category: category, url: url, imageUrls: imageUrlArray, imageRecord: imageRecord)
             }
             break
         case .artist:
-            musicInfo = MusicInfo(artist: name, album: nil, song: nil, category: category, url: url, imageUrls: imageUrlArray)
+            musicInfo = MusicInfo(artist: name, album: nil, song: nil, category: category, url: url, imageUrls: imageUrlArray, imageRecord: imageRecord)
             break
         case .tracks:
             if artist != nil {
-                musicInfo = MusicInfo(artist: artist!, album: nil, song: name, category: category, url: url, imageUrls: imageUrlArray)
+                musicInfo = MusicInfo(artist: artist!, album: nil, song: name, category: category, url: url, imageUrls: imageUrlArray, imageRecord: imageRecord)
             }
             break
         }
