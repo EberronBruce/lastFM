@@ -153,12 +153,8 @@ class DataService {
 
             if let imageLinks = info[KEY_IMAGE] as? [Dictionary<String,String>] {
                 let imageLinkArray = self.parseImageUrls(imageLinks: imageLinks)
-                if let artistName = artist {
-                    let imageRecord = getImageRecord(imageUrls: imageLinkArray, artist: artistName)
-                    let musicInfo = setupMusicInfo(category: category, name: name, url: url, artist: artist, imageUrlArray: imageLinkArray, imageRecord: imageRecord)
-                    return musicInfo
-                }
-                let musicInfo = setupMusicInfo(category: category, name: name, url: url, artist: artist, imageUrlArray: imageLinkArray)
+                let imageRecord = getImageRecord(imageUrls: imageLinkArray, artist: artist ?? STRING_EMPTY)
+                let musicInfo = setupMusicInfo(category: category, name: name, url: url, artist: artist, imageUrlArray: imageLinkArray, imageRecord: imageRecord)
                 return musicInfo
             }
             let musicInfo = setupMusicInfo(category: category, name: name, url: url, artist: artist)
@@ -166,7 +162,7 @@ class DataService {
         }
         return nil
     }
-    
+
     private func getImageRecord(imageUrls : [String : String], artist: String) -> ImageRecord? {
         var imageRecord : ImageRecord? = nil
         if let url = imageUrls[KEY_LARGE], !url.isEmpty {
