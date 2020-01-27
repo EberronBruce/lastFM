@@ -11,13 +11,15 @@ import UIKit
 class MusicImageCell : UICollectionViewCell {
     
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var styleView: UIView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        styleView.layer.cornerRadius = CELL_STYLE_CORNER_RADIUS
     }
     
-    func configureCell(imageName : String) {
+    func configureCell(image : UIImage) {
         imageView.frame.size = CGSize(width: 100, height: 100)
-        imageView?.image = UIImage(named: imageName)
+        imageView?.image = image
     }
 }

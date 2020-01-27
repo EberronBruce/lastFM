@@ -8,6 +8,7 @@
 
 import Foundation
 typealias webServiceCompletionHandler = (_ data: Data? ,_ response: Dictionary<String, Any>, _ error: Error?) -> Void
+typealias webDataCompletionHandler = (_ data:Data?, _ error: Error?) -> Void
 
 func postJSONToURL(urlString : String, contentBody : [String : Any?], completionHandler: @escaping webServiceCompletionHandler) {
     
@@ -49,4 +50,28 @@ func postJSONToURL(urlString : String, contentBody : [String : Any?], completion
         completionHandler(data,dictionary,error)
     }
     task.resume()
+}
+
+
+func getDataFromURL(urlString: String, completion: @escaping webDataCompletionHandler) {
+    if let url = URL(string: urlString) {
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            
+            if error != nil {
+                print(error?.localizedDescription ?? "Unknown Error")
+                completion(nil, error!)
+                return
+            }
+            DispatchQueue.main.async {
+                if data != nil {
+                    completion(data!, nil)
+                } else {
+                    print("Get data from: \(urlString) return nil")
+                    completion(nil, nil)
+                }
+            }
+            
+        }.resume()
+    }
+    
 }

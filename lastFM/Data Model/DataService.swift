@@ -7,7 +7,8 @@
 //
 
 import UIKit
-/* NOTE: There is some issues with the API call and it sometimes sends back wrong data. Confirmed it with Postman and a web browser.
+/* NOTE: There are several issues with the API call and it sometimes sends back wrong data.
+ Confirmed it with Postman and a web browser.
  To re-duplicate an example follow steps:
  Make api call to artist setting artist of 'R' page 6 limit 1, or limit 6 page 1.
  There will be only 3 items return back instead of 6.
@@ -45,7 +46,43 @@ class DataService {
         let text =  manipulateStringFor(searchText)
         makeTrackCall(searchText: text, pageNumber: pageNumber)
     }
-
+    
+    func makeImageCallFrom(url urlString : String,  completionHandler: @escaping (_ image: UIImage? , _ error: Error?) -> Void) {
+        getDataFromURL(urlString: urlString) { (data, error) in
+            var image : UIImage? = nil
+            if data != nil, let dataImage = UIImage(data: data!) {
+                image = dataImage
+            } else {
+                if let imageLogo = UIImage(named: IMAGE_LOGO) {
+                    image = imageLogo
+                }
+            }
+            completionHandler(image, error)
+        }
+    }
+    
+    func getArtistDetailsFromApiCall(_ artist: String) {
+        print("Artist Details: \(artist)")
+        let text =  manipulateStringFor(artist)
+        makeArtistCall(artist: text)
+    }
+    
+    private func makeArtistCall(artist: String) {
+        let url = "\(URL_BASE)\(URL_ARTIST_INFO)\(artist)\(URL_API_KEY)\(URL_FORMAT_JSON)"
+        postJSONToURL(urlString: url, contentBody: [:]) { (data, response, error) in
+            self.parseArtistInformation(response: response)
+        }
+    }
+    
+    private func parseArtistInformation(response : [String : Any]) {
+        print("Response: \(response)")
+        if let artist = response[KEY_ARTIST] as? Dictionary<String, Any>, let bio = artist[KEY_BIO] as? Dictionary<String, Any>, let links = bio[KEY_LINKS] as? Dictionary<String, Any>, let link = links[KEY_LINK] as? Dictionary<String, Any> {
+            if let href = link[KEY_HREF] as? String {
+                sendArtistInfoLink(link: href)
+            }
+        }
+    }
+    
     private func makeArtistCall(searchText : String, pageNumber: Int, limitNumber: Int = NUMBER_LIMIT) {
         let url = ("\(URL_BASE)\(URL_ARTIST)\(searchText)\(URL_API_KEY)\(URL_FORMAT_JSON)\(URL_LIMIT)\(limitNumber)\(URL_PAGE)\(pageNumber)")
         postJSONToURL(urlString: url, contentBody: [:]) { (data, response, error) in
@@ -154,11 +191,6 @@ class DataService {
         }
         return imageUrlDict
     }
-    
-    private func makeImageCall() {
-        
-    }
-    
  
     private func manipulateStringFor(_ searchText : String) -> String {
         var text = searchText
@@ -185,6 +217,16 @@ class DataService {
         if musicInfoContainer.count == MAX_API_CALLS {
             NotificationCenter.default.post(name: NOTIFY_API_MUSIC_DICT, object: self, userInfo: musicInfoContainer)
         }
+    }
+    
+    private func sendOutImage(_ image : UIImage = UIImage(named: IMAGE_LOGO) ?? UIImage()) {
+        let dictionary = [KEY_IMAGE_GET : image]
+        NotificationCenter.default.post(name: NOTIFY_API_IMAGE, object: self, userInfo: dictionary)
+    }
+    
+    private func sendArtistInfoLink(link: String) {
+        let dictionary = [KEY_ARTIST : link]
+        NotificationCenter.default.post(name: NOTIFY_API_ARTIST, object: self, userInfo: dictionary)
     }
     
     

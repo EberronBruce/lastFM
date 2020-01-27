@@ -15,6 +15,7 @@ let URL_TRACK = "?method=track.search&track="
 let URL_FORMAT_JSON = "&format=json"
 let URL_LIMIT = "&limit="
 let URL_PAGE = "&page="
+let URL_ARTIST_INFO = "?method=artist.getinfo&artist="
 let URL_API_KEY = "&api_key=27939c41a4d5e9db202b2036c5bc12df"
 let SECERT_KEY = "d59e4e5f555604aa476e83202bef1ee6"
 
@@ -29,7 +30,8 @@ let CELL_STYLE_CORNER_RADIUS : CGFloat = 5
 
 let NOTIFY_API_MUSIC_DICT = Notification.Name("api.notify.music.dictionary.complete")
 let NOTIFY_API_MUSIC_ARRAY = Notification.Name("api.notify.music.array.complete")
-
+let NOTIFY_API_IMAGE = Notification.Name("api.notify.image.complete")
+let NOTIFY_API_ARTIST = Notification.Name("api.notify.artist.details.complete")
 
 let DOWNLOAD_QUEUE = "Download queue"
 let IMAGE_OPERATION_DOWNLOAD_ERROR = "Issue with image Data"
@@ -45,6 +47,13 @@ let KEY_NAME = "name"
 let KEY_URL = "url"
 let KEY_IMAGE = "image"
 let KEY_NUMBER_TEXT = "#text"
+let KEY_DATA = "data"
+let KEY_BIO = "bio"
+let KEY_LINKS = "links"
+let KEY_LINK = "link"
+let KEY_HREF = "href"
+
+
 let CODE_HTTP_SPACE = "%20"
 let STRING_SPACE = " "
 let STRING_EMPTY = ""
@@ -69,5 +78,8 @@ let SECTION_TITLE_SONGS = "Songs"
 
 let KEY_INFO_ARRAY = "infoContainer"
 let KEY_INFO_DICTIONARY_CATEGORY = "musicInfoContainer"
+let KEY_IMAGE_GET = "musicImageGet"
 
 let FETCH_SECTION = 1
+
+let SEGUE_DETAIL_VIEW = "detailViewSegue"

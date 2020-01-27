@@ -11,40 +11,103 @@ import UIKit
 class MusicDetailViewController: UIViewController {
     
     @IBOutlet weak var imageCollectionView: UICollectionView!
-    private let reuseIdentifier = CELL_MUSIC_IMAGE
-    private var photosUrlArray = [String]()
+    @IBOutlet weak var albumTitleLabel: UILabel!
+    @IBOutlet weak var albumTextLabel: UILabel!
+    @IBOutlet weak var songTitleLabel: UILabel!
+    @IBOutlet weak var songTextLabel: UILabel!
+    @IBOutlet weak var artistTitleLabel: UILabel!
+    @IBOutlet weak var artistButton: UIButton!
+    
+    var musicInfo : MusicInfo! = nil
+    var imageArray : [UIImage]? = nil
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // Do any additional setup after loading the view.
         setUpView()
+        NotificationCenter.default.addObserver(self, selector: #selector(actOnArtistInformationCompleteNotification(_:)), name: NOTIFY_API_ARTIST, object: nil)
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        setNeedsStatusBarAppearanceUpdate()
     }
     
     func setUpView() {
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.title = "Testing"
         //self.automaticallyAdjustsScrollViewInsets = false
-        photosUrlArray = [ "logo", "weezer", "cher", "fallout"]
         imageCollectionView?.delegate = self
         imageCollectionView?.dataSource = self
+        
+        self.navigationController?.navigationBar.tintColor = COLOR_THEME_RED
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
+        self.navigationController?.navigationBar.barStyle = .black
+        
+        setupLabels()
+        
+        artistButton.setTitle(musicInfo.artist, for: .normal)
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    
+    private func setupLabels(){
+        switch musicInfo.category {
+        case .albums:
+            self.title = musicInfo.album
+            songTextLabel.isHidden = true
+            songTitleLabel.isHidden = true
+            albumTextLabel.text = musicInfo.album
+        case .tracks:
+            self.title = musicInfo.song
+            albumTextLabel.isHidden = true
+            albumTitleLabel.isHidden = true
+            songTextLabel.text = musicInfo.song
+        case .artist:
+            self.title = musicInfo.artist
+            songTextLabel.isHidden = true
+            songTitleLabel.isHidden = true
+            albumTextLabel.isHidden = true
+            albumTitleLabel.isHidden = true
+            break
+        }
     }
-    */
-
+    
+    @IBAction func artistButtonTapped(_ sender: UIButton) {
+        print("Button tapped")
+        let dataService = DataService()
+        dataService.getArtistDetailsFromApiCall(musicInfo.artist)
+    }
+    
+    @objc func actOnArtistInformationCompleteNotification(_ notification: Notification) {
+        DispatchQueue.main.async {
+            if let data = notification.userInfo as? [String : String] {
+                if let link = data[KEY_ARTIST] {
+                    let webView = WebViewController(string: link)
+                    self.present(webView, animated: true)
+                } else {
+                    print("NOTHING")
+                }
+            }
+        }
+    }
+    
+    private func displayAlertView() {
+        let alertController = UIAlertController(title: "NO Artist", message: "Testing", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
 }
 
 extension MusicDetailViewController: UICollectionViewDataSource,  UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return photosUrlArray.count
+        if imageArray != nil {
+            return imageArray!.count
+        }
+        return 1
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -52,9 +115,11 @@ extension MusicDetailViewController: UICollectionViewDataSource,  UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! MusicImageCell
-        let photoName = photosUrlArray[indexPath.row]
-        cell.configureCell(imageName: photoName)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CELL_MUSIC_IMAGE, for: indexPath) as! MusicImageCell
+        if let image = imageArray?[indexPath.row] {
+            cell.configureCell(image: image)
+        } 
+        
         return cell
     }
     

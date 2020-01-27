@@ -76,14 +76,40 @@ extension MusicSelectorController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //TODO - Work on Transition here
-
+        if let imageURL = infoContainer[indexPath.row].imageUrls?[KEY_EXTRA_LARGE] {
+            let dataService = DataService()
+            dataService.makeImageCallFrom(url: imageURL) { imageFromCall, error in
+                self.processTableViewSection(indexPath: indexPath, image: imageFromCall, error: error)
+            }
+        }
+        
     }
 }
 
 
 //MARK: - Methods Used In TableView Delegates and Datasources
 extension MusicSelectorController {
+    
+    private func processTableViewSection(indexPath: IndexPath, image imageFromCall : UIImage?, error: Error?) {
+        DispatchQueue.main.async {
+            var params = [String: Any]()
+            if let image = imageFromCall {
+                params[KEY_IMAGE] = image
+            }
+            if error != nil {
+                if let image = UIImage(named: IMAGE_LOGO) {
+                    params[KEY_IMAGE] = image
+                }
+            }
+            params[KEY_DATA] = self.infoContainer[indexPath.row]
+            self.performSegue(withIdentifier: SEGUE_DETAIL_VIEW, sender: params)
+        }
+    }
+    
+    internal func scrollTableViewToTop() {
+        let indexPath = IndexPath(row: 0, section: 0)
+        tableView.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.top, animated: true)
+    }
     
     internal func getKeyFromTabBar() -> MusicCategory? {
         if let sectionSelected = MusicCategory(rawValue: tabBar.selectedItem!.tag) {

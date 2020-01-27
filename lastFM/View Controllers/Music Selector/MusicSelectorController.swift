@@ -36,6 +36,14 @@ class MusicSelectorController: UIViewController {
         setupViewController()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -48,12 +56,10 @@ class MusicSelectorController: UIViewController {
         artistTabButton.tag = MusicCategory.artist.rawValue
         albumsTabButton.tag = MusicCategory.albums.rawValue
         songsTabButton.tag = MusicCategory.tracks.rawValue
-        tabBar.selectedItem = artistTabButton
+        tabBar.selectedItem = albumsTabButton
         NotificationCenter.default.addObserver(self, selector: #selector(actOnMusicDictonaryApiCompleteNotification(_:)), name: NOTIFY_API_MUSIC_DICT, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(actOnMusicArrayApiCompleteNotification(_:)), name: NOTIFY_API_MUSIC_ARRAY, object: nil)
-        
-        
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
+
     }
     
     internal func resetPageNumber() {
@@ -177,8 +183,14 @@ class MusicSelectorController: UIViewController {
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == SEGUE_DETAIL_VIEW, let detailVC = segue.destination as? MusicDetailViewController {
+            if let data = sender as?  [String: Any], let musicInfo = data[KEY_DATA] as? MusicInfo {
+                detailVC.musicInfo = musicInfo
+                if let image = data[KEY_IMAGE] as? UIImage {
+                    detailVC.imageArray = [image]
+                }
+            }
+        }
     }
 
 }
@@ -187,6 +199,7 @@ class MusicSelectorController: UIViewController {
 extension MusicSelectorController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         self.resetPageNumber()
+        isFetchingNewPage = false
         let pageNumber = 1
         //To prevent more that one API call at time which will help resolve race conditions
         beforeSearch = searchText
@@ -209,7 +222,7 @@ extension MusicSelectorController: UISearchBarDelegate {
         musicInfoContainer = [:]
         infoContainer = []
         imageRecords = []
-        tableView.reloadData()
+        self.tableView.reloadData()
     }
 }
 
@@ -220,7 +233,10 @@ extension MusicSelectorController: UITabBarDelegate {
         }
         imageRecords = []
         loadImageRecordData(musicInfoArray: infoContainer)
-        tableView.reloadData()
+        isFetchingNewPage = false
+        
+        scrollTableViewToTop()
+        self.tableView.reloadData()
     }
 }
 
