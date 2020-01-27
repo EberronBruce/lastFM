@@ -8,6 +8,12 @@
 
 import UIKit
 
+/*
+ This file is used to extend the Music Selector Controller class. This is to keep
+ the files small and not too massive.
+ */
+
+
 //MARK: - TableView Delegates and Datasource Methods
 extension MusicSelectorController: UITableViewDataSource, UITableViewDelegate {
     
@@ -90,6 +96,7 @@ extension MusicSelectorController: UITableViewDataSource, UITableViewDelegate {
 //MARK: - Methods Used In TableView Delegates and Datasources
 extension MusicSelectorController {
     
+    //This process information from when the user selects a cell.
     private func processTableViewSection(indexPath: IndexPath, image imageFromCall : UIImage?, error: Error?) {
         DispatchQueue.main.async {
             var params = [String: Any]()
@@ -105,12 +112,12 @@ extension MusicSelectorController {
             self.performSegue(withIdentifier: SEGUE_DETAIL_VIEW, sender: params)
         }
     }
-    
+    //Goes to the top of the tableview
     internal func scrollTableViewToTop() {
         let indexPath = IndexPath(row: 0, section: 0)
         tableView.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.top, animated: true)
     }
-    
+    //Gets the music category from the current tabbar selected
     internal func getKeyFromTabBar() -> MusicCategory? {
         if let sectionSelected = MusicCategory(rawValue: tabBar.selectedItem!.tag) {
             switch sectionSelected {
@@ -124,7 +131,7 @@ extension MusicSelectorController {
         }
         return nil
     }
-    
+    //Startign fetching a new page of data.
     private func beginNewPageFetch(category: MusicCategory) {
         isFetchingNewPage = true
         var pageNumber = self.pageNumberDictionary[category] ?? 1
@@ -135,7 +142,7 @@ extension MusicSelectorController {
             self.makeAPICallForMusicInfoFrom(text: searchText, pageNumber: pageNumber, musicCategory: category)
         }
     }
-    
+    //Checks if the image exists and starts download if not.
     private func startOperationForImageRecord(imageRecord : ImageRecord, indexPath : IndexPath) {
         switch imageRecord.state {
         case .New:
@@ -146,7 +153,7 @@ extension MusicSelectorController {
             break
         }
     }
-    
+    //Starts the download using queues and operations.
     private func startDownload(imageRecord : ImageRecord, indexPath: IndexPath) {
         if pendingOperations.downloadsInProgress[indexPath] != nil {
             return
@@ -165,7 +172,7 @@ extension MusicSelectorController {
         pendingOperations.downloadsInProgress[indexPath] = downloader
         pendingOperations.downloadQueue.addOperation(downloader)
     }
-    
+    //Checks the state of the image record
     func getImageFrom(imageRecord : ImageRecord?, indexPath : IndexPath) {
         if let state = imageRecord?.state, let record = imageRecord {
             switch state {
@@ -175,7 +182,7 @@ extension MusicSelectorController {
             }
         }
     }
-    
+    //Gets the title and subtitle for current index path
     func getCellInformation(indexPath: IndexPath) -> (title : String, subTitle : String) {
         var title : String = STRING_EMPTY
         var subTitle : String = STRING_EMPTY

@@ -8,6 +8,11 @@
 
 import UIKit
 
+/*
+ This is the view contoller used fo the first view with the table view.
+ It allows for the user to select the category and infinite scrolling.
+ */
+
 class MusicSelectorController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -59,7 +64,11 @@ class MusicSelectorController: UIViewController {
         tabBar.selectedItem = albumsTabButton
         NotificationCenter.default.addObserver(self, selector: #selector(actOnMusicDictonaryApiCompleteNotification(_:)), name: NOTIFY_API_MUSIC_DICT, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(actOnMusicArrayApiCompleteNotification(_:)), name: NOTIFY_API_MUSIC_ARRAY, object: nil)
-
+        
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     internal func resetPageNumber() {
@@ -72,6 +81,7 @@ class MusicSelectorController: UIViewController {
         }
     }
 
+    //MARK: - Notification Methods
     @objc func actOnMusicDictonaryApiCompleteNotification(_ notification: Notification) {
         DispatchQueue.main.async {
             guard let isSafe = self.checkSearchAndMakeAPICallIfDifferent() else {
@@ -121,7 +131,6 @@ class MusicSelectorController: UIViewController {
     }
     
 
-    
     private func loadImageRecordData(musicInfoArray : [MusicInfo]) {
         for musicInfo in musicInfoArray {
             if let url = musicInfo.imageUrls![KEY_LARGE], !url.isEmpty {
@@ -169,8 +178,6 @@ class MusicSelectorController: UIViewController {
         }
         
     }
-    
- 
     
     internal func setContainerFromSelectTabBar(tabBar: UITabBar) {
         guard let tag = tabBar.selectedItem?.tag else {
@@ -230,12 +237,11 @@ extension MusicSelectorController: UITabBarDelegate {
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         if let category = MusicCategory(rawValue: item.tag), let musicArray = musicInfoContainer[category] {
             self.infoContainer = musicArray
+            scrollTableViewToTop()
         }
+        isFetchingNewPage = false
         imageRecords = []
         loadImageRecordData(musicInfoArray: infoContainer)
-        isFetchingNewPage = false
-        
-        scrollTableViewToTop()
         self.tableView.reloadData()
     }
 }

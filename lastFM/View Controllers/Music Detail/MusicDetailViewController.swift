@@ -38,7 +38,6 @@ class MusicDetailViewController: UIViewController {
     }
     
     func setUpView() {
-        //self.automaticallyAdjustsScrollViewInsets = false
         imageCollectionView?.delegate = self
         imageCollectionView?.dataSource = self
         
@@ -74,7 +73,6 @@ class MusicDetailViewController: UIViewController {
     }
     
     @IBAction func artistButtonTapped(_ sender: UIButton) {
-        print("Button tapped")
         let dataService = DataService()
         dataService.getArtistDetailsFromApiCall(musicInfo.artist)
     }
@@ -86,15 +84,15 @@ class MusicDetailViewController: UIViewController {
                     let webView = WebViewController(string: link)
                     self.present(webView, animated: true)
                 } else {
-                    print("NOTHING")
+                    self.displayAlertView(title: ALERT_NO_ARTIST_TITLE, message: ALERT_NO_ARTIST_MESSAGE)
                 }
             }
         }
     }
     
-    private func displayAlertView() {
-        let alertController = UIAlertController(title: "NO Artist", message: "Testing", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+    private func displayAlertView(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: ALERT_OK_BUTTON, style: .default, handler: nil)
         alertController.addAction(okAction)
         
         self.present(alertController, animated: true, completion: nil)
@@ -102,6 +100,7 @@ class MusicDetailViewController: UIViewController {
     
 }
 
+//MARK: - UICollectionView Delegate and Datasource methods
 extension MusicDetailViewController: UICollectionViewDataSource,  UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if imageArray != nil {
@@ -126,8 +125,6 @@ extension MusicDetailViewController: UICollectionViewDataSource,  UICollectionVi
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: self.imageCollectionView.frame.size.width, height: self.imageCollectionView.frame.size.height)
     }
-    
-   
     
 }
 

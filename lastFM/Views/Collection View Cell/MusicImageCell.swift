@@ -8,6 +8,10 @@
 
 import UIKit
 
+/*
+ This is used to show the image in the collection view in the Detail View
+ */
+
 class MusicImageCell : UICollectionViewCell {
     
     @IBOutlet weak var imageView: UIImageView!

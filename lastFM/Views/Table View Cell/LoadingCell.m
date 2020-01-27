@@ -7,15 +7,17 @@
 //
 
 #import "LoadingCell.h"
-#import "lastFM-Swift.h"
+/*
+ This is used for the loading indicator on the table view.
+ */
 
 @implementation LoadingCell
-const int CELL_CORNER_RADIUS = 5;
+const int CellCornerRadius = 5;
 
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
-    self.cellStyleView.layer.cornerRadius = CELL_CORNER_RADIUS;
+    self.cellStyleView.layer.cornerRadius = CellCornerRadius;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

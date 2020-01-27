@@ -8,6 +8,10 @@
 
 import UIKit
 
+/*
+ This is used for a table view to display the image, title, and subtitle
+ */
+
 class MusicCell: UITableViewCell {
     @IBOutlet weak var cellStyleView: UIView!
     @IBOutlet weak var cellImage: UIImageView!

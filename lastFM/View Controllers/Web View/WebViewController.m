@@ -8,6 +8,12 @@
 
 #import "WebViewController.h"
 
+/*
+ This web vies is used in place of a artist bio information.
+ So the artist bio link is sent here and this loads.
+ */
+
+
 @interface WebViewController ()
 
 @end
@@ -16,6 +22,7 @@
 WKWebView *webView;
 bool needDismissed = NO;
 UIActivityIndicatorView *spinner;
+const NSString *ErrorMessage = @"NO URL STRING MUST ABORT";
 
 -(id)initWithString: (NSString *)url {
     self = [super init];
@@ -24,8 +31,6 @@ UIActivityIndicatorView *spinner;
     }
     return self;
 }
-
-
 
 - (void)loadView {
     WKWebViewConfiguration *webConfiguration = [[WKWebViewConfiguration alloc] init];
@@ -38,9 +43,8 @@ UIActivityIndicatorView *spinner;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    //NSLog(_urlString);
     if(_urlString == NULL) {
-        NSLog(@"NO URL STRING MUST ABORT");
+        NSLog(@"%@", ErrorMessage);
         needDismissed = YES;
     } else {
         NSURL *url = [[NSURL alloc] initWithString:_urlString];
@@ -50,6 +54,7 @@ UIActivityIndicatorView *spinner;
     }
 }
 
+//Creates a spinner to notifiy the user the webpage is still loading
 - (void)createActivitySpinner {
     spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
     spinner.color = UIColor.blackColor;

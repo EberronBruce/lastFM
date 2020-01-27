@@ -8,6 +8,7 @@
 
 import UIKit
 
+//This enmu is use to categorize how the data is split.
 enum MusicCategory : Int {
     case albums, artist, tracks
     
@@ -18,6 +19,7 @@ enum MusicCategory : Int {
     }()
 }
 
+//Container class for the data that can be shared.
 class MusicInfo {
     private var _artist: String!
     private var _album: String?

@@ -8,6 +8,10 @@
 
 import UIKit
 
+/*
+ Used for storing constansts used in the application
+ */
+
 let URL_BASE = "http://ws.audioscrobbler.com/2.0/"
 let URL_ALBUM = "?method=album.search&album="
 let URL_ARTIST = "?method=artist.search&artist="
@@ -26,7 +30,6 @@ let CELL_MUSIC = "musicCell"
 let CELL_MUSIC_IMAGE = "musicImageCell"
 let CELL_LOADING = "loadingCell"
 let CELL_STYLE_CORNER_RADIUS : CGFloat = 5
-
 
 let NOTIFY_API_MUSIC_DICT = Notification.Name("api.notify.music.dictionary.complete")
 let NOTIFY_API_MUSIC_ARRAY = Notification.Name("api.notify.music.array.complete")
@@ -53,7 +56,6 @@ let KEY_LINKS = "links"
 let KEY_LINK = "link"
 let KEY_HREF = "href"
 
-
 let CODE_HTTP_SPACE = "%20"
 let STRING_SPACE = " "
 let STRING_EMPTY = ""
@@ -70,11 +72,6 @@ let IMAGE_LOGO = "logo"
 
 let COLOR_THEME_GRAY = UIColor(displayP3Red: 0.314, green: 0.314, blue: 0.314, alpha: 1)
 let COLOR_THEME_RED = UIColor(displayP3Red: 0.725, green: 0.099, blue: 0.000, alpha: 1)
-let FONT_MARKER_FELT = "Marker Felt"
-
-let SECTION_TITLE_ALBUMS = "Albums"
-let SECTION_TITLE_ARTISTS = "Artist"
-let SECTION_TITLE_SONGS = "Songs"
 
 let KEY_INFO_ARRAY = "infoContainer"
 let KEY_INFO_DICTIONARY_CATEGORY = "musicInfoContainer"
@@ -83,3 +80,20 @@ let KEY_IMAGE_GET = "musicImageGet"
 let FETCH_SECTION = 1
 
 let SEGUE_DETAIL_VIEW = "detailViewSegue"
+
+let WEB_POST = "POST"
+let WEB_APPLICATION_JSON =  "application/json"
+let WEB_CONTENT_TYPE =  "Content-Type"
+let WEB_APPLICATION_JSON_REQUEST = "application/jsonrequest"
+let WEB_ACCEPT = "Accept"
+let WEB_IDENTITY = "identity"
+let WEB_CONTENT_ENCODING = "Content-Encoding"
+let WEB_ERROR_PARSING = "Error parsing: "
+let WEB_FAILED_TO_PARSE = "Failed to parse: "
+let WEB_ERROR_UNKNOWN = "Unknown Error"
+let WEB_GET_DATA_FROM = "Get data from: "
+let WEB_RETURN_NIL = " return nil"
+
+let ALERT_OK_BUTTON = "OK"
+let ALERT_NO_ARTIST_TITLE = "NO ARTIST BIO"
+let ALERT_NO_ARTIST_MESSAGE = "The bio information for this artists could not be retrieved."

@@ -7,6 +7,11 @@
 //
 
 import Foundation
+
+/*
+ This file is used to have a template is make the API calls easier to read.
+ */
+
 typealias webServiceCompletionHandler = (_ data: Data? ,_ response: Dictionary<String, Any>, _ error: Error?) -> Void
 typealias webDataCompletionHandler = (_ data:Data?, _ error: Error?) -> Void
 
@@ -15,20 +20,16 @@ func postJSONToURL(urlString : String, contentBody : [String : Any?], completion
     guard let url = URL(string: urlString) else { return }
     var request = URLRequest(url: url)
     
-    request.httpMethod = "POST"
-    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    request.setValue("application/jsonrequest", forHTTPHeaderField: "Accept")
-    request.setValue("identity", forHTTPHeaderField: "Content-Encoding")
+    request.httpMethod = WEB_POST
+    request.setValue(WEB_APPLICATION_JSON, forHTTPHeaderField: WEB_CONTENT_TYPE)
+    request.setValue(WEB_APPLICATION_JSON_REQUEST, forHTTPHeaderField: WEB_ACCEPT)
+    request.setValue(WEB_IDENTITY, forHTTPHeaderField: WEB_CONTENT_ENCODING)
     
     let session = URLSession.shared
     
     var jsonData = Data()
     do {
         jsonData = try JSONSerialization.data(withJSONObject: contentBody, options: .prettyPrinted)
-        let decoded = try JSONSerialization.jsonObject(with: jsonData, options: [])
-        if decoded is  [String : String] {
-            //print("decoded data: \(decoded)")
-        }
     } catch {
         print(error.localizedDescription)
     }
@@ -40,9 +41,9 @@ func postJSONToURL(urlString : String, contentBody : [String : Any?], completion
         do{
             dictionary = try JSONSerialization.jsonObject(with: data!, options: []) as! [String : Any]
         } catch let parseError {
-            print("error parsing: \(parseError)")
+            print("\(WEB_ERROR_PARSING)\(parseError)")
             let responseString = String(data: data!, encoding: String.Encoding.utf8) as String?
-            print("failed to parse: \(responseString!)")
+            print("\(WEB_FAILED_TO_PARSE)\(responseString!)")
             completionHandler(nil,[:],parseError)
             return
         }
@@ -58,7 +59,7 @@ func getDataFromURL(urlString: String, completion: @escaping webDataCompletionHa
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             
             if error != nil {
-                print(error?.localizedDescription ?? "Unknown Error")
+                print(error?.localizedDescription ?? WEB_ERROR_UNKNOWN)
                 completion(nil, error!)
                 return
             }
@@ -66,7 +67,7 @@ func getDataFromURL(urlString: String, completion: @escaping webDataCompletionHa
                 if data != nil {
                     completion(data!, nil)
                 } else {
-                    print("Get data from: \(urlString) return nil")
+                    print("\(WEB_GET_DATA_FROM)\(urlString)\(WEB_RETURN_NIL)")
                     completion(nil, nil)
                 }
             }
