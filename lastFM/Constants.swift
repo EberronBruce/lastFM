@@ -97,3 +97,5 @@ let WEB_RETURN_NIL = " return nil"
 let ALERT_OK_BUTTON = "OK"
 let ALERT_NO_ARTIST_TITLE = "NO ARTIST BIO"
 let ALERT_NO_ARTIST_MESSAGE = "The bio information for this artists could not be retrieved."
+
+let LASTFM_URL = "https://www.last.fm"
