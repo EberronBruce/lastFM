@@ -352,14 +352,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Red Raven Computing Studios has no affilation with last.fm. " lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="35n-bt-XWd">
-                                <rect key="frame" x="20" y="356" width="374" height="104"/>
-                                <fontDescription key="fontDescription" name="AmericanTypewriter" family="American Typewriter" pointSize="30"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="If you are interested in this content, please visit last.fm at " lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ntg-vf-goh">
-                                <rect key="frame" x="20" y="480" width="374" height="104"/>
+                                <rect key="frame" x="20" y="356" width="374" height="104"/>
                                 <fontDescription key="fontDescription" name="AmericanTypewriter" family="American Typewriter" pointSize="30"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -371,7 +365,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9yu-Hl-yUL">
-                                <rect key="frame" x="0.0" y="604" width="414" height="49"/>
+                                <rect key="frame" x="0.0" y="480" width="414" height="49"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="31"/>
                                 <state key="normal" title="https://www.last.fm"/>
                                 <connections>
@@ -381,17 +375,14 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="Ntg-vf-goh" firstAttribute="top" secondItem="kZX-wl-ZhB" secondAttribute="bottom" constant="20" id="4dk-RH-YrD"/>
                             <constraint firstItem="XQR-aK-sUK" firstAttribute="trailing" secondItem="kZX-wl-ZhB" secondAttribute="trailing" constant="20" id="6QH-J5-v8a"/>
                             <constraint firstItem="XQR-aK-sUK" firstAttribute="trailing" secondItem="Ntg-vf-goh" secondAttribute="trailing" constant="20" id="7DV-ez-N6t"/>
                             <constraint firstItem="Ntg-vf-goh" firstAttribute="leading" secondItem="XQR-aK-sUK" secondAttribute="leading" constant="20" id="Gag-AN-ez3"/>
-                            <constraint firstItem="XQR-aK-sUK" firstAttribute="trailing" secondItem="35n-bt-XWd" secondAttribute="trailing" constant="20" id="PLb-1j-WSR"/>
-                            <constraint firstItem="35n-bt-XWd" firstAttribute="leading" secondItem="XQR-aK-sUK" secondAttribute="leading" constant="20" id="QLa-GP-RHa"/>
                             <constraint firstItem="9yu-Hl-yUL" firstAttribute="leading" secondItem="XQR-aK-sUK" secondAttribute="leading" id="g1i-1m-slA"/>
                             <constraint firstItem="kZX-wl-ZhB" firstAttribute="top" secondItem="XQR-aK-sUK" secondAttribute="top" constant="40" id="hVY-dm-FfI"/>
                             <constraint firstItem="kZX-wl-ZhB" firstAttribute="leading" secondItem="XQR-aK-sUK" secondAttribute="leading" constant="20" id="n6F-w3-IuP"/>
-                            <constraint firstItem="Ntg-vf-goh" firstAttribute="top" secondItem="35n-bt-XWd" secondAttribute="bottom" constant="20" id="ngi-oG-QEC"/>
                             <constraint firstItem="9yu-Hl-yUL" firstAttribute="top" secondItem="Ntg-vf-goh" secondAttribute="bottom" constant="20" id="oQu-QE-ZZ4"/>
-                            <constraint firstItem="35n-bt-XWd" firstAttribute="top" secondItem="kZX-wl-ZhB" secondAttribute="bottom" constant="20" id="xZG-3Z-g4t"/>
                             <constraint firstItem="XQR-aK-sUK" firstAttribute="trailing" secondItem="9yu-Hl-yUL" secondAttribute="trailing" id="zhH-Xf-9bT"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="XQR-aK-sUK"/>
